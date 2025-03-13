@@ -23,6 +23,11 @@ BCS_1=s2n_handshake_io.bc s2n_handshake_type.bc s2n_connection.bc s2n_kex.bc \
 	s2n_tls13.bc s2n_quic_support.bc s2n_tls13_key_schedule.bc
 BCS=$(addprefix $(BITCODE_DIR), $(BCS_1))
 
+OBJS += $(OBJDIR)/tls/s2n_attestation.o
+OBJS += $(OBJDIR)/tls/extensions/s2n_client_attestation_request.o
+OBJS += $(OBJDIR)/tls/extensions/s2n_server_attestation_request.o
+OBJS += $(OBJDIR)/tls/extensions/s2n_encrypted_attestation_evidence.o
+
 .PHONY : all
 all: $(OBJS)
 	$(foreach subfolder, $(SUB_BUILDS), $(MAKE) -C $(subfolder))

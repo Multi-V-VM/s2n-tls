@@ -43,6 +43,9 @@
 #include "utils/s2n_mem.h"
 #include "utils/s2n_timer.h"
 
+/* Forward declaration to avoid circular dependency */
+struct s2n_attestation_context;
+
 #define S2N_TLS_PROTOCOL_VERSION_LEN 2
 
 #define S2N_PEER_MODE(our_mode) ((our_mode + 1) % 2)
@@ -402,6 +405,9 @@ struct s2n_connection {
     /* Track KeyUpdates for metrics */
     uint8_t send_key_updated;
     uint8_t recv_key_updated;
+
+    /* Attestation context for WebAssembly migration */
+    struct s2n_attestation_context *attestation_context;
 };
 
 S2N_CLEANUP_RESULT s2n_connection_ptr_free(struct s2n_connection **s2n_connection);

@@ -52,6 +52,11 @@
 #include "tls/extensions/s2n_server_supported_versions.h"
 #include "tls/s2n_connection.h"
 
+/* Forward declarations for attestation extensions */
+extern const s2n_extension_type s2n_client_attestation_request_extension;
+extern const s2n_extension_type s2n_server_attestation_request_extension;
+extern const s2n_extension_type s2n_encrypted_attestation_evidence_extension;
+
 static const s2n_extension_type *const client_hello_extensions[] = {
     &s2n_client_supported_versions_extension,
 
@@ -81,7 +86,8 @@ static const s2n_extension_type *const client_hello_extensions[] = {
     &s2n_psk_key_exchange_modes_extension,
     &s2n_client_early_data_indication_extension,
     &s2n_client_ems_extension,
-    &s2n_client_psk_extension /* MUST be last */
+    &s2n_client_psk_extension, /* MUST be last */
+    &s2n_client_attestation_request_extension,
 };
 
 static const s2n_extension_type *const tls12_server_hello_extensions[] = {
@@ -127,6 +133,8 @@ static const s2n_extension_type *const encrypted_extensions[] = {
     &s2n_server_alpn_extension,
     &s2n_quic_transport_parameters_extension,
     &s2n_server_early_data_indication_extension,
+    &s2n_server_attestation_request_extension,
+    &s2n_encrypted_attestation_evidence_extension,
 };
 
 static const s2n_extension_type *const cert_req_extensions[] = {
@@ -154,9 +162,10 @@ static const s2n_extension_type *const nst_extensions[] = {
     &s2n_nst_early_data_indication_extension,
 };
 
-#define S2N_EXTENSION_LIST(list)                                \
-    {                                                           \
-        .extension_types = (list), .count = s2n_array_len(list) \
+#define S2N_EXTENSION_LIST(list)     \
+    {                                \
+        .extension_types = (list),   \
+        .count = s2n_array_len(list) \
     }
 
 static s2n_extension_type_list extension_lists[] = {

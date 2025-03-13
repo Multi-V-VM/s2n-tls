@@ -54,10 +54,15 @@ static const char *no_such_error = "Internal s2n error";
     ERR_ENTRY(S2N_ERR_CLOSED, "connection is closed") \
     ERR_ENTRY(S2N_ERR_IO_BLOCKED, "underlying I/O operation would block") \
     ERR_ENTRY(S2N_ERR_ASYNC_BLOCKED, "blocked on external async function invocation") \
+    ERR_ENTRY(S2N_ERR_EARLY_DATA_BLOCKED, "blocked reading early data") \
+    ERR_ENTRY(S2N_ERR_APP_DATA_BLOCKED, "blocked reading application data") \
     ERR_ENTRY(S2N_ERR_ALERT, "TLS alert received") \
     ERR_ENTRY(S2N_ERR_ENCRYPT, "error encrypting data") \
     ERR_ENTRY(S2N_ERR_DECRYPT, "error decrypting data") \
     ERR_ENTRY(S2N_ERR_BAD_MESSAGE, "Bad message encountered") \
+    ERR_ENTRY(S2N_ERR_UNEXPECTED_CERT_REQUEST, "Client forbids mutual authentication, but server requested a cert") \
+    ERR_ENTRY(S2N_ERR_MISSING_CERT_REQUEST, "Client requires mutual authentication, but server did not request a cert") \
+    ERR_ENTRY(S2N_ERR_MISSING_CLIENT_CERT, "Server requires client certificate") \
     ERR_ENTRY(S2N_ERR_KEY_INIT, "error initializing encryption key") \
     ERR_ENTRY(S2N_ERR_KEY_DESTROY, "error destroying encryption key") \
     ERR_ENTRY(S2N_ERR_DH_SERIALIZING, "error serializing Diffie-Hellman parameters") \
@@ -277,7 +282,6 @@ static const char *no_such_error = "Internal s2n error";
     ERR_ENTRY(S2N_ERR_NO_PRIVATE_KEY, "Certificate found, but no corresponding private key") \
     ERR_ENTRY(S2N_ERR_CERT_NOT_VALIDATED, "Certificate not validated") \
     ERR_ENTRY(S2N_ERR_MAX_EARLY_DATA_SIZE, "Maximum early data bytes exceeded") \
-    ERR_ENTRY(S2N_ERR_EARLY_DATA_BLOCKED, "Blocked on early data") \
     ERR_ENTRY(S2N_ERR_PSK_MODE, "Mixing resumption and external PSKs is not supported") \
     ERR_ENTRY(S2N_ERR_X509_EXTENSION_VALUE_NOT_FOUND, "X509 extension value not found") \
     ERR_ENTRY(S2N_ERR_INVALID_X509_EXTENSION_TYPE, "Invalid X509 extension type") \
@@ -294,25 +298,25 @@ static const char *no_such_error = "Internal s2n error";
     ERR_ENTRY(S2N_ERR_CERT_OWNERSHIP, "The ownership of the certificate chain is incompatible with the operation") \
     ERR_ENTRY(S2N_ERR_INTERNAL_LIBCRYPTO_ERROR, "An internal error has occurred in the libcrypto API") \
     ERR_ENTRY(S2N_ERR_NO_RENEGOTIATION, "Only secure, server-initiated renegotiation is supported") \
-    ERR_ENTRY(S2N_ERR_APP_DATA_BLOCKED, "Blocked on application data during handshake") \
-    ERR_ENTRY(S2N_ERR_KTLS_MANAGED_IO, "kTLS cannot be enabled while custom I/O is configured for the connection")  \
+    ERR_ENTRY(S2N_ERR_KTLS_MANAGED_IO, "kTLS cannot be enabled while custom I/O is configured for the connection") \
     ERR_ENTRY(S2N_ERR_HANDSHAKE_NOT_COMPLETE, "Operation is only allowed after the handshake is complete") \
     ERR_ENTRY(S2N_ERR_KTLS_UNSUPPORTED_PLATFORM, "kTLS is unsupported on this platform") \
     ERR_ENTRY(S2N_ERR_KTLS_UNSUPPORTED_CONN, "kTLS is unsupported for this connection") \
-    ERR_ENTRY(S2N_ERR_KTLS_ENABLE, "An error occurred when attempting to enable kTLS on socket. Ensure the 'tls' kernel module is enabled.")  \
-    ERR_ENTRY(S2N_ERR_KTLS_BAD_CMSG, "Error handling cmsghdr.")  \
+    ERR_ENTRY(S2N_ERR_KTLS_ENABLE, "An error occurred when attempting to enable kTLS on socket. Ensure the 'tls' kernel module is enabled.") \
+    ERR_ENTRY(S2N_ERR_KTLS_BAD_CMSG, "Error handling cmsghdr.") \
     ERR_ENTRY(S2N_ERR_ATOMIC, "Atomic operations in this environment would require locking") \
     ERR_ENTRY(S2N_ERR_TEST_ASSERTION, "Test assertion failed") \
     ERR_ENTRY(S2N_ERR_KTLS_RENEG, "kTLS does not support secure renegotiation") \
-    ERR_ENTRY(S2N_ERR_KTLS_KEYUPDATE, "Received KeyUpdate from peer, but kernel does not support updating tls keys") \
-    ERR_ENTRY(S2N_ERR_KTLS_KEY_LIMIT, "Reached key encryption limit, but kernel does not support updating tls keys") \
-    ERR_ENTRY(S2N_ERR_UNEXPECTED_CERT_REQUEST, "Client forbids mutual authentication, but server requested a cert") \
-    ERR_ENTRY(S2N_ERR_MISSING_CERT_REQUEST, "Client requires mutual authentication, but server did not request a cert") \
-    ERR_ENTRY(S2N_ERR_MISSING_CLIENT_CERT, "Server requires client certificate") \
-    ERR_ENTRY(S2N_ERR_INVALID_SERIALIZED_CONNECTION, "Serialized connection is invalid"); \
-    ERR_ENTRY(S2N_ERR_TOO_MANY_CAS, "Too many certificate authorities in trust store"); \
-    ERR_ENTRY(S2N_ERR_BAD_HEX, "Could not parse malformed hex string"); \
-    ERR_ENTRY(S2N_ERR_CONFIG_NULL_BEFORE_CH_CALLBACK, "Config set to NULL before client hello callback. This should not be possible outside of tests."); \
+    ERR_ENTRY(S2N_ERR_KTLS_KEYUPDATE, "failed to update keys for ktls") \
+    ERR_ENTRY(S2N_ERR_KTLS_KEY_LIMIT, "kTLS key usage limit exceeded") \
+    ERR_ENTRY(S2N_ERR_INVALID_ATTESTATION_TYPE, "invalid attestation type") \
+    ERR_ENTRY(S2N_ERR_ATTESTATION_EVIDENCE_VERIFICATION_FAILED, "attestation evidence verification failed") \
+    ERR_ENTRY(S2N_ERR_ATTESTATION_EVIDENCE_MISSING, "attestation evidence is missing") \
+    ERR_ENTRY(S2N_ERR_ATTESTATION_CHALLENGE_MISMATCH, "attestation challenge does not match") \
+    ERR_ENTRY(S2N_ERR_TOO_MANY_CAS, "Too many certificate authorities in trust store") \
+    ERR_ENTRY(S2N_ERR_BAD_HEX, "Could not parse malformed hex string") \
+    ERR_ENTRY(S2N_ERR_CONFIG_NULL_BEFORE_CH_CALLBACK, "Config set to NULL before client hello callback. This should not be possible outside of tests.") \
+    ERR_ENTRY(S2N_ERR_INVALID_SERIALIZED_CONNECTION, "Serialized connection is invalid") \
     ERR_ENTRY(S2N_ERR_API_UNSUPPORTED_BY_LIBCRYPTO, "The invoked s2n-tls API is not supported by the libcrypto") \
     /* clang-format on */
 
