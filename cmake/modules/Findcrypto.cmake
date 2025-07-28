@@ -18,11 +18,11 @@
 # the next branch exists purely for cmake compatibility with versions older than 3.15. Please do not remove it before
 # we baseline on a newer version. It does not like duplicate target declarations. Work around that by checking it isn't
 # defined first.
-if (TARGET crypto OR TARGET OpenSSL::crypto)
+if (TARGET crypto OR TARGET OpenSSL::Crypto)
     if (TARGET crypto)
         set(TARGET_NAME "crypto")
     else()
-        set(TARGET_NAME "OpenSSL::crypto")
+        set(TARGET_NAME "OpenSSL::Crypto")
     endif()
 
     get_target_property(crypto_INCLUDE_DIR ${TARGET_NAME} INTERFACE_INCLUDE_DIRECTORIES)
@@ -100,13 +100,13 @@ else()
         )
             set(THREADS_PREFER_PTHREAD_FLAG ON)
             find_package(Threads REQUIRED)
-            add_library(OpenSSL::crypto UNKNOWN IMPORTED)
-            set_target_properties(OpenSSL::crypto PROPERTIES
+            add_library(OpenSSL::Crypto UNKNOWN IMPORTED)
+            set_target_properties(OpenSSL::Crypto PROPERTIES
                     INTERFACE_INCLUDE_DIRECTORIES "${crypto_INCLUDE_DIR}")
-            set_target_properties(OpenSSL::crypto PROPERTIES
+            set_target_properties(OpenSSL::Crypto PROPERTIES
                     IMPORTED_LINK_INTERFACE_LANGUAGES "C"
                     IMPORTED_LOCATION "${crypto_LIBRARY}")
-            add_dependencies(OpenSSL::crypto Threads::Threads)
+            add_dependencies(OpenSSL::Crypto Threads::Threads)
         endif()
     endif()
 
