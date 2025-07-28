@@ -236,7 +236,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
 if (NOT $ENV{S2N_LIBCRYPTO} MATCHES "awslc")
-    # add cast-qual back in for non AWS-LC
+    # add cast-qual back in for non OpenSSL-LC
     target_compile_options(${PROJECT_NAME} PRIVATE -Wcast-qual)
 endif()
 
@@ -254,7 +254,7 @@ endif()
 
 # For interning, we need to find the static libcrypto library. Cmake configs
 # can branch on the variable BUILD_SHARED_LIBS to e.g. avoid having to define
-# multiple targets. An example is AWS-LC:
+# multiple targets. An example is OpenSSL-LC:
 # https://github.com/awslabs/aws-lc/blob/main/crypto/cmake/crypto-config.cmake#L5
 if (S2N_INTERN_LIBCRYPTO)
     set(BUILD_SHARED_LIBS_BACKUP ${BUILD_SHARED_LIBS})
@@ -268,7 +268,7 @@ if (TARGET crypto)
 else()
     find_package(crypto REQUIRED)
     message(STATUS "Using libcrypto from the cmake path")
-    set(LINK_LIB "AWS::crypto")
+    set(LINK_LIB "OpenSSL::crypto")
 endif()
 
 if (S2N_INTERN_LIBCRYPTO)
@@ -373,11 +373,11 @@ feature_probe_result(S2N_STACKTRACE ${S2N_STACKTRACE})
 
 if (S2N_INTERN_LIBCRYPTO)
 
-    # Check if the AWS::crypto target has beeen added and handle it
-    if (TARGET AWS::crypto)
+    # Check if the OpenSSL::crypto target has beeen added and handle it
+    if (TARGET OpenSSL::crypto)
         # Get the target library type (shared or static)
-        get_target_property(target_type AWS::crypto TYPE)
-        message(STATUS "AWS::crypto target type: ${target_type}")
+        get_target_property(target_type OpenSSL::crypto TYPE)
+        message(STATUS "OpenSSL::crypto target type: ${target_type}")
 
         # If we didn't find the a target with static library type, fallback to
         # existing crypto_STATIC_LIBRARY and crypto_INCLUDE_DIR
@@ -386,8 +386,8 @@ if (S2N_INTERN_LIBCRYPTO)
             # The finder module defines these appropriately, but if we go through
             # the target config we need to query this information from the target
             # first.
-            get_target_property(crypto_STATIC_LIBRARY AWS::crypto LOCATION)
-            get_target_property(crypto_INCLUDE_DIR AWS::crypto INTERFACE_INCLUDE_DIRECTORIES)
+            get_target_property(crypto_STATIC_LIBRARY OpenSSL::crypto LOCATION)
+            get_target_property(crypto_INCLUDE_DIR OpenSSL::crypto INTERFACE_INCLUDE_DIRECTORIES)
         endif()
     endif()
 
@@ -775,7 +775,7 @@ endif()
 
 install(EXPORT "${PROJECT_NAME}-targets"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
-        NAMESPACE AWS::
+        NAMESPACE OpenSSL::
         COMPONENT Development)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
