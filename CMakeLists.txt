@@ -268,7 +268,7 @@ if (TARGET crypto)
 else()
     find_package(crypto REQUIRED)
     message(STATUS "Using libcrypto from the cmake path")
-    set(LINK_LIB "OpenSSL::Crypto")
+    set(LINK_LIB "crypto")
 endif()
 
 if (S2N_INTERN_LIBCRYPTO)
@@ -373,11 +373,11 @@ feature_probe_result(S2N_STACKTRACE ${S2N_STACKTRACE})
 
 if (S2N_INTERN_LIBCRYPTO)
 
-    # Check if the OpenSSL::Crypto target has beeen added and handle it
-    if (TARGET OpenSSL::Crypto)
+    # Check if the crypto target has beeen added and handle it
+    if (TARGET crypto)
         # Get the target library type (shared or static)
-        get_target_property(target_type OpenSSL::Crypto TYPE)
-        message(STATUS "OpenSSL::Crypto target type: ${target_type}")
+        get_target_property(target_type crypto TYPE)
+        message(STATUS "crypto target type: ${target_type}")
 
         # If we didn't find the a target with static library type, fallback to
         # existing crypto_STATIC_LIBRARY and crypto_INCLUDE_DIR
@@ -386,8 +386,8 @@ if (S2N_INTERN_LIBCRYPTO)
             # The finder module defines these appropriately, but if we go through
             # the target config we need to query this information from the target
             # first.
-            get_target_property(crypto_STATIC_LIBRARY OpenSSL::Crypto LOCATION)
-            get_target_property(crypto_INCLUDE_DIR OpenSSL::Crypto INTERFACE_INCLUDE_DIRECTORIES)
+            get_target_property(crypto_STATIC_LIBRARY crypto LOCATION)
+            get_target_property(crypto_INCLUDE_DIR crypto INTERFACE_INCLUDE_DIRECTORIES)
         endif()
     endif()
 
